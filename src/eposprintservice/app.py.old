@@ -1,0 +1,62 @@
+import toga
+from toga.style import Pack
+from toga.style.pack import COLUMN, ROW
+from escpos.printer import Network
+import random
+import string
+import barcode
+from barcode.writer import ImageWriter
+
+
+class ePosPrintService(toga.App):
+    def startup(self):
+        """Construct and show the Toga application.
+
+        Usually, you would add your application to a main content box.
+        We then create a main window (with a name matching the app), and
+        show the main window.
+        """
+        main_box = toga.Box()
+
+        # Create buttons for printing text and barcode
+        print_text_button = toga.Button('Print Text', on_press=self.print_text)
+        print_barcode_button = toga.Button('Print Barcode', on_press=self.print_barcode)
+
+        # Add the buttons to the main box
+        main_box.add(print_text_button)
+        main_box.add(print_barcode_button)
+
+        # Add the main box to the main window
+        self.main_window = toga.MainWindow(title=self.formal_name)
+        self.main_window.content = main_box
+        self.main_window.show()
+
+    def print_text(self, widget):
+        # Connect to the network printer
+        printer = Network('192.168.1.33', port=9100)
+        random_text = self.generate_random_text()
+        printer.text("Random Text: {}\n".format(random_text))
+        printer.cut()
+        printer.close()
+
+    def print_barcode(self, widget):
+        # Connect to the network printer
+        printer = Network('192.168.1.33', port=9100)
+        random_barcode_image = self.generate_random_barcode()
+        printer.barcode(random_barcode_image, 'EAN13', height=100)
+        printer.cut()
+        printer.close()
+
+    def generate_random_text(self, length=10):
+        return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+
+    def generate_random_barcode(self):
+        barcode_value = self.generate_random_text(12)  # Generate a random barcode value
+        barcode_class = barcode.get_barcode_class('ean13')  # Specify the barcode format
+        barcode_instance = barcode_class(barcode_value, writer=ImageWriter())  # Create a barcode instance
+        filename = barcode_instance.save('barcode')  # Save the barcode image
+        return filename
+
+
+def main():
+    return ePosPrintService()
