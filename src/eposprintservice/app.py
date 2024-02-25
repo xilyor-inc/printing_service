@@ -1,28 +1,22 @@
 import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
-from escpos.printer import Network
+from .print_lib import Printer
 
 
 class ePosPrintService(toga.App):
-    def startup(self):
-        """Construct and show the Toga application.
+    printer = Printer()
 
-        Usually, you would add your application to a main content box.
-        We then create a main window (with a name matching the app), and
-        show the main window.
-        """
+    def startup(self):
         main_box = toga.Box()
 
-        # Create buttons for printing text and barcode
-        print_text_button = toga.Button('Print Text', on_press=self.print_text)
-        print_text_button2 = toga.Button('Print Text2', on_press=self.print_text2)
-        print_barcode_button = toga.Button('Print Barcode', on_press=self.show_alert)
+        # Create buttons
+        btn_connect = toga.Button('Connect to Network Printer', on_press=self.connect)
+        btn_print = toga.Button('Print Test Text', on_press=self.print_test_text)
 
         # Add the buttons to the main box
-        main_box.add(print_text_button)
-        main_box.add(print_text_button2)
-        main_box.add(print_barcode_button)
+        main_box.add(btn_connect)
+        main_box.add(btn_print)
 
         # Add the main box to the main window
         self.main_window = toga.MainWindow(title=self.formal_name)
@@ -33,20 +27,23 @@ class ePosPrintService(toga.App):
         # Display an alert when the button is clicked
         self.main_window.info_dialog('Alert', 'Button clicked! hoho')
 
-    def print_text(self, widget):
-        # Display an alert when the button is clicked
-        self.main_window.info_dialog('Alert', 'goodle hoho')
-        print("goodle hoho")
+    def connect(self, widget):
+        print("Connect to Network Printer")
+        # Get IP and port from input fields
+        ip = '192.168.1.33'  # self.ip_input.value
+        port = 9100  # self.port_input.value
 
-
-
-    def print_text2(self, widget):
         # Connect to the network printer
-        printer = Network('192.168.1.33', port=9100)
-        random_text = "Hello World!!!" # self.generate_random_text()
-        printer.text("Random Text: {}\n".format(random_text))
-        printer.cut()
-        printer.close()
+        self.printer.connect_printer(ip, port)
+        if self.printer.is_connected:
+            self.main_window.info_dialog('Info', 'Successfully connected to printer!')
+        else:
+            self.main_window.error_dialog('Error', 'Failed to connect to printer!')
+
+    def print_test_text(self, widget):
+        self.printer.print_text('Hello, World!')
+        self.printer.cut_paper()
+        self.printer.close_printer()
 
 
 def main():
