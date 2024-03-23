@@ -10,8 +10,20 @@ author_email = "mohamed.elleuch@xilyor.com"
 
 [tool.briefcase.app.eposprintservice]
 formal_name = "ePos Print Service"
-description = "Print service for ePos thermal printers"
-long_description = """More details about the app should go here.
+description = "Xilyor's Print service for ePos thermal printers"
+long_description = """
+Introducing our revolutionary printing app for ePOS thermal printers! With seamless integration,
+our app bypasses the limitations of traditional printing interfaces, offering direct connectivity
+to ePOS printers. Say goodbye to dependency on Android or Chrome native printing interfaces – our
+solution empowers users to effortlessly print from their devices to ePOS thermal printers.
+Experience unparalleled convenience as our app simplifies the printing process, delivering crisp,
+professional-quality prints with just a few taps. Whether it's receipts, tickets, or labels, our
+app ensures swift and reliable printing, enhancing efficiency for businesses and individuals alike.
+Enjoy the freedom to print from any compatible device, eliminating the need for specialized hardware
+or complex setups. With intuitive controls and robust features, our app streamlines printing tasks,
+saving time and resources. Elevate your printing experience with our innovative solution, designed
+to meet the demands of modern printing needs. Embrace the future of printing technology with our
+cutting-edge app for ePOS thermal printers.
 """
 icon = "src/eposprintservice/resources/eposprintservice"
 sources = [

@@ -1,7 +1,9 @@
 import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW, CENTER, LEFT, RIGHT
+import threading
 from .print_lib import Printer
+from .server import PrintServer
 
 
 class ePosPrintService(toga.App):
@@ -30,7 +32,7 @@ class ePosPrintService(toga.App):
         btn_disconnect = toga.Button('Disconnect', on_press=self.disconnect_printer)
         btn_test_printer = toga.Button('Test Printer', on_press=self.print_test_text)
         btn_start_server = toga.Button('Start Server', on_press=self.start_server)
-        self.server_indicator = toga.Label("OFF")
+        self.server_indicator = toga.Label("OFF", style=Pack(text_align=RIGHT))
 
         # Add widgets to the main box
         address_box.add(ip_label)
@@ -62,7 +64,7 @@ class ePosPrintService(toga.App):
         self.main_window.content = main_box
         self.main_window.show()
 
-    def connect_printer(self, widget):
+    def connect_printer(self, widget, debug=True):
         print("Connect to Network Printer")
         # Get IP and port from input fields
         ip = self.input_ip.value
@@ -70,28 +72,27 @@ class ePosPrintService(toga.App):
 
         # Connect to the network printer
         self.printer.connect_printer(ip, port)
-        if self.printer.is_connected:
-            self.main_window.info_dialog('Info', 'Successfully connected to printer!')
-        else:
-            self.main_window.error_dialog('Error', 'Failed to connect to printer!')
+        if debug:
+            if self.printer.is_connected:
+                self.main_window.info_dialog('Info', 'Successfully connected to printer!')
+            else:
+                self.main_window.error_dialog('Error', 'Failed to connect to printer!')
 
     def print_test_text(self, widget):
-        text = "Hello World!\n"
-        self.printer.set_bold(True)
-        self.printer.print_text("Bold: "+text)
-        self.printer.set_bold(False)
-        self.printer.print_text("Normal: "+text)
-        self.printer.set_font('a')
-        self.printer.print_text("Font A: "+text)
-        self.printer.set_font('b')
-        self.printer.print_text("Font B: "+text)
-        self.printer.cut_paper()
+        self.connect_printer(widget, debug=False)
+        self.printer.print_test_text()
+        self.disconnect_printer(widget)
 
     def disconnect_printer(self, widget):
         self.printer.close_printer()
 
     def start_server(self, widget):
-        pass
+        PrintServer.set_printer(self.printer)
+        # Create a new thread to run the server
+        server_thread = threading.Thread(target=PrintServer.run_server)
+        # Start the thread
+        server_thread.start()
+        self.server_indicator.label = "ON"
 
 
 def main():
