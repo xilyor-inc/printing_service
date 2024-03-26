@@ -33,6 +33,7 @@ class PrintServer(BaseHTTPRequestHandler):
             # Send a response
             self.send_response(code)
             self.send_header('Content-type', 'text/plain')
+            self.send_header("Access-Control-Allow-Origin", "*")  # Allow requests from any origin
             self.end_headers()
             self.wfile.write(msg)
 
@@ -43,6 +44,7 @@ class PrintServer(BaseHTTPRequestHandler):
             # Send a response
             self.send_response(code)
             self.send_header('Content-type', 'text/plain')
+            self.send_header("Access-Control-Allow-Origin", "*")  # Allow requests from any origin
             self.end_headers()
             self.wfile.write(b'printer disconnected successfully')
 
@@ -132,11 +134,13 @@ class PrintServer(BaseHTTPRequestHandler):
             # Send a response
             self.send_response(200)
             self.send_header('Content-type', 'text/plain')
+            self.send_header("Access-Control-Allow-Origin", "*")  # Allow requests from any origin
             self.end_headers()
             self.wfile.write(b'Received POST request')
         else:
             self.send_response(404)
             self.send_header('Content-type', 'text/plain')
+            self.send_header("Access-Control-Allow-Origin", "*")  # Allow requests from any origin
             self.end_headers()
             self.wfile.write(b'Not Found')
 
@@ -144,6 +148,7 @@ class PrintServer(BaseHTTPRequestHandler):
         if self.path == '/':
             self.send_response(200)
             self.send_header('Content-type', 'text/html; charset=utf-8')
+            self.send_header("Access-Control-Allow-Origin", "*")  # Allow requests from any origin
             if self.printer is not None:
                 self.end_headers()
                 self.wfile.write(b'<h2>Printing Test Page...</h2>')
@@ -159,6 +164,7 @@ class PrintServer(BaseHTTPRequestHandler):
         elif self.path == '/table':
             self.send_response(200)
             self.send_header('Content-type', 'text/html; charset=utf-8')
+            self.send_header("Access-Control-Allow-Origin", "*")  # Allow requests from any origin
             if self.printer is not None:
                 self.end_headers()
                 self.wfile.write(b'<h2>Printing Test Table...</h2>')
@@ -179,10 +185,10 @@ class PrintServer(BaseHTTPRequestHandler):
 
     @classmethod
     def run_server(cls):
-        server_address = ('', cls.port)
-        httpd = HTTPServer(server_address, cls)
-        print(f'Starting server on port {cls.port}...')
-        httpd.serve_forever()
+            server_address = ('', cls.port)
+            httpd = HTTPServer(server_address, cls)
+            print(f'Starting server on port {cls.port}...')
+            httpd.serve_forever()
 
 
 

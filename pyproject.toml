@@ -1,15 +1,17 @@
 # This project was generated with 0.3.17 using template: https://github.com/beeware/briefcase-template@v0.3.17
 [tool.briefcase]
-project_name = "ePos Print Service"
-bundle = "com.xilyor.print-service"
+project_name = "ePos Printing Service"
+bundle = "com.xilyor.printing-service"
 version = "0.0.1"
-url = "https://print-service.xilyor.com/eposprintservice"
+url = "https://printing-service.xilyor.com/eposprintservice"
 license = "Proprietary"
 author = "Mohamed Elleuch"
 author_email = "mohamed.elleuch@xilyor.com"
 
+
 [tool.briefcase.app.eposprintservice]
-formal_name = "ePos Print Service"
+
+formal_name = "ePos Printing Service"
 description = "Xilyor's Print service for ePos thermal printers"
 long_description = """
 Introducing our revolutionary printing app for ePOS thermal printers! With seamless integration,
@@ -25,7 +27,20 @@ saving time and resources. Elevate your printing experience with our innovative 
 to meet the demands of modern printing needs. Embrace the future of printing technology with our
 cutting-edge app for ePOS thermal printers.
 """
-icon = "src/eposprintservice/resources/eposprintservice"
+
+permission.camera = true
+camera = true
+permission.microphone = true
+microphone = true
+permission.battery = true
+battery = true
+permission.location = true
+location = true
+
+icon = "src/eposprintservice/resources/icon"
+splash.normal = "src/eposprintservice/resource/normal-splash"
+splash.large = "src/eposprintservice/resource/large-splash"
+splash.xlarge = "src/eposprintservice/resource/xlarge-splash"
 sources = [
     "src/eposprintservice"
 ]
