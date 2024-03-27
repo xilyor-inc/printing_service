@@ -9,15 +9,16 @@ from .server import PrintServer
 class ePosPrintService(toga.App):
     main_window = None
     printer = Printer()
-    input_ip= None
-    input_port= None
-    server_indicator= None
+    input_ip = None
+    input_port = None
+    server_indicator = None
 
     def startup(self):
 
         address_box = toga.Box()
         port_box = toga.Box()
         buttons_box = toga.Box()
+        log_view_box = toga.Box()
         main_box = toga.Box()
 
         # IP address input field

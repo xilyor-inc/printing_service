@@ -86,6 +86,7 @@ class PrintServer(BaseHTTPRequestHandler):
 
                     # print the table after has been constructed
                     self.printer.print_table(table, cols_width)
+                    print("Table printed was: ", table)
                 elif item == "NEW_LINE":
                     self.printer.print_text("\n")
                 elif item == "CENTER":

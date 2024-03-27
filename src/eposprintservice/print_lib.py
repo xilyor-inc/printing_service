@@ -197,11 +197,36 @@ class Printer:
             return False
 
     def print_table(self, table_data, col_widths):
-
-        # Print the table
         for row in table_data:
             for col, width in zip(row, col_widths):
-                self.printer.text(col.ljust(width))
+                font_style = 'a'  # Default font style is 'a'
+                bold_style = False
+                inverted_style = False
+                self.printer.set(font=font_style, bold=bold_style, invert=inverted_style)
+
+                command_list = ['*', '^', '!']
+                while col[0] in command_list and col[-1] in command_list and col[0] == col[-1]:
+                    # Check if cell content has styling commands
+                    if col.startswith('*') and col.endswith('*'):
+                        bold_style = True
+                        col = col[1:-1]  # Remove '*' before and after the content
+                    if col.startswith('^') and col.endswith('^'):
+                        font_style = 'b'
+                        col = col[1:-1]  # Remove '<' and '>' before and after the content
+                    if col.startswith('!') and col.endswith('!'):
+                        inverted_style = True
+                        col = col[1:-1]  # Remove '!' before and after the content
+
+                # Apply styling
+                self.printer.set(font=font_style, bold=bold_style, invert=inverted_style)
+                self.printer.text(col.ljust(width))  # Print the cell content
+
+                # reset the printer style
+                font_style = 'a'  # Default font style is 'a'
+                bold_style = False
+                inverted_style = False
+                self.printer.set(font=font_style, bold=bold_style, invert=inverted_style)
+
             self.printer.text("\n")
 
     def print_test_text(self):
