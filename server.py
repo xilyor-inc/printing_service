@@ -1,6 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from .print_lib import Printer
+from print_lib import Printer
 
 
 class PrintServer(BaseHTTPRequestHandler):

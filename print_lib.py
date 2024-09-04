@@ -274,4 +274,3 @@ class Printer:
         col_widths = [32, 8, 8]
         self.print_table(table, col_widths)
 
-
