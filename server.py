@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 from print_lib import Printer
+from flask_cors import CORS  # Import the CORS extension
+
 
 class PrintServer:
     printer = None
@@ -11,6 +13,7 @@ class PrintServer:
     @classmethod
     def create_app(cls):
         app = Flask(__name__)
+        CORS(app)  # Enable CORS for all routes
 
         @app.route('/connect_printer', methods=['POST'])
         def connect_printer():
@@ -46,4 +49,4 @@ class PrintServer:
 #     printer = Printer()
 #     PrintServer.set_printer(printer)
 #     app = PrintServer.create_app()
-#     app.run(host="0.0.0.0", port=5000)
+#     app.run(host="0.0.0.0", port=8000)
