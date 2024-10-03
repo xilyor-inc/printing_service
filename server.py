@@ -14,6 +14,18 @@ class PrintServer(BaseHTTPRequestHandler):
     def set_printer(cls, printer: Printer):
         cls.printer = printer
 
+    # Modify this method to add CORS headers
+    def _set_headers(self):
+        self.send_header('Access-Control-Allow-Origin', '*')  # Allow CORS from any origin
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.send_header('Content-type', 'application/json')
+
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self._set_headers()
+        self.end_headers()
+
     def do_POST(self):
         print("---------------------------" + self.path + "--------------------------------")
         if self.path == '/connect_printer':
@@ -32,8 +44,8 @@ class PrintServer(BaseHTTPRequestHandler):
 
             # Send a response
             self.send_response(code)
-            self.send_header('Content-type', 'text/plain')
-            self.send_header("Access-Control-Allow-Origin", "*")  # Allow requests from any origin
+            # self.send_header('Content-type', 'text/plain')
+            self._set_headers()
             self.end_headers()
             self.wfile.write(msg)
 
@@ -43,8 +55,8 @@ class PrintServer(BaseHTTPRequestHandler):
 
             # Send a response
             self.send_response(code)
-            self.send_header('Content-type', 'text/plain')
-            self.send_header("Access-Control-Allow-Origin", "*")  # Allow requests from any origin
+            # self.send_header('Content-type', 'text/plain')
+            self._set_headers()
             self.end_headers()
             self.wfile.write(b'printer disconnected successfully')
 
@@ -134,8 +146,8 @@ class PrintServer(BaseHTTPRequestHandler):
 
             # Send a response
             self.send_response(200)
-            self.send_header('Content-type', 'text/plain')
-            self.send_header("Access-Control-Allow-Origin", "*")  # Allow requests from any origin
+            # self.send_header('Content-type', 'text/plain')
+            self._set_headers()
             self.end_headers()
             self.wfile.write(b'Received POST request')
         else:
@@ -148,8 +160,6 @@ class PrintServer(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
             self.send_response(200)
-            self.send_header('Content-type', 'text/html; charset=utf-8')
-            self.send_header("Access-Control-Allow-Origin", "*")  # Allow requests from any origin
             if self.printer is not None:
                 self.end_headers()
                 self.wfile.write(b'<h2>Printing Test Page...</h2>')
@@ -166,6 +176,7 @@ class PrintServer(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'text/html; charset=utf-8')
             self.send_header("Access-Control-Allow-Origin", "*")  # Allow requests from any origin
+            self._set_headers()
             if self.printer is not None:
                 self.end_headers()
                 self.wfile.write(b'<h2>Printing Test Table...</h2>')
